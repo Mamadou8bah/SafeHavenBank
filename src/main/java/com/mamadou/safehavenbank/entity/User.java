@@ -4,7 +4,9 @@ package com.mamadou.safehavenbank.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mamadou.safehavenbank.enums.Role;
+import com.mamadou.safehavenbank.token.PasswordResetToken;
 import com.mamadou.safehavenbank.token.Token;
+import com.mamadou.safehavenbank.token.VerificationToken;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -70,6 +72,13 @@ public class User implements UserDetails {
     @JsonIgnore
     private List<Token> tokens;
 
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy = "user")
+    @JsonIgnore
+    private List<PasswordResetToken> passwordResetTokens;
+
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy = "user")
+    @JsonIgnore
+    private List<VerificationToken> verificationTokens;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getAuthorities();
