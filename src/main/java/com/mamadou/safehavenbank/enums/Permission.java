@@ -1,0 +1,27 @@
+package com.mamadou.safehavenbank.enums;
+
+
+public enum Permission {
+    ACCOUNT_VIEW,
+    ACCOUNT_CREATE,
+    ACCOUNT_UPDATE,
+    ACCOUNT_DELETE,
+    ACCOUNT_SUSPEND,
+
+
+    TRANSACTION_VIEW,
+    TRANSACTION_CREATE,
+    TRANSACTION_APPROVE,
+
+    LOAN_APPLY,
+    LOAN_APPROVE,
+    LOAN_VIEW,
+
+    CARD_MANAGE,
+    USER_MANAGE,
+    ROLE_MANAGE,
+    AUDIT_VIEW,
+    SYSTEM_CONFIGURE
+
+
+}
