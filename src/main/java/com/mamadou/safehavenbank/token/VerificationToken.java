@@ -1,9 +1,7 @@
 package com.mamadou.safehavenbank.token;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.mamadou.safehavenbank.entity.User;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,4 +23,8 @@ public class VerificationToken {
     private boolean expired;
 
     private boolean revoked;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
