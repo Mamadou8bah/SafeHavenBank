@@ -22,3 +22,6 @@ spring:
       password: test
       name: test
 
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
