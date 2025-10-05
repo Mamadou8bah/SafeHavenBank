@@ -17,11 +17,9 @@ spring:
 
 
 
-  security:
-    user:
-      password: test
-      name: test
-
+  mail:
+    password: ${MAIL_PASSWORD}
+    username: ${MAIL_USERNAME}
 jwt:
   secret: ${JWT_SECRET}
   expiration: ${JWT_EXPIRATION}
