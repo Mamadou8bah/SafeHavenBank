@@ -20,6 +20,11 @@ spring:
   mail:
     password: ${MAIL_PASSWORD}
     username: ${MAIL_USERNAME}
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
 jwt:
   secret: ${JWT_SECRET}
   expiration: ${JWT_EXPIRATION}

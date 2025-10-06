@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Verify Your Account</title>
+</head>
+<body style="font-family: Arial, sans-serif; justify-content:center;background-color:#f7f7f7; padding:20px;">
+<div style="background-color:#fff; padding:30px; border-radius:8px; text-align: center;justify-content: center; margin:auto;">
+  <h2 style="color:#333;">Hello, <span th:text="${firstname}">User</span>!</h2>
+  <p>Thank you for registering at <strong>SafeHaven Bank</strong>.</p>
+  <p>Please verify your account by clicking the button below:</p>
+  <a th:href="${verificationUrl}"
+     style="display:inline-block; padding:10px 20px; color:#fff; background-color:#007bff; border-radius:5px; text-decoration:none;">
+    Verify My Account
+  </a>
+  <p>If you did not sign up, please ignore this email.</p>
+  <br/>
+  <p>– SafeHaven Bank Team</p>
+</div>
+</body>
+</html>

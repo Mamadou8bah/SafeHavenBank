@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,13 +20,29 @@ public class VerificationToken {
     private long id;
 
     @NotNull
-    private long token;
+    @Column(unique = true)
+    private String token;
 
     private boolean expired;
 
-    private boolean revoked;
+    private LocalDateTime createdAt;
+    private LocalDateTime expiresAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+
+    public VerificationToken(String token, User user) {
+        this.token = token;
+        this.user = user;
+        this.createdAt = LocalDateTime.now();
+        this.expiresAt = this.createdAt.plusMinutes(5);
+        this.expired = false;
+    }
+
+
+    public boolean isExpired() {
+        return LocalDateTime.now().isAfter(this.expiresAt);
+    }
 }

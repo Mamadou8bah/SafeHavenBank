@@ -68,6 +68,8 @@ public class User implements UserDetails {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    private boolean isVerified;
+
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
     @JsonIgnore
     private List<Token> tokens;
