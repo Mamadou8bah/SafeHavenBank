@@ -12,6 +12,7 @@ import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +24,13 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserRepository userRepository;
-    private  final BCryptPasswordEncoder encoder;
+    private final BCryptPasswordEncoder encoder;
 
     private final EmailService emailService;
 
     private final VerificationTokenService verificationTokenService;
+
+    private final AuthenticationManager authenticationManager;
 
     @Transactional
     public String register( @Valid RegisterRequest registerRequest) throws MessagingException, UnsupportedEncodingException {
@@ -47,6 +50,8 @@ public class AuthService {
 
         return "Check Your Email to verify your account";
     }
+
+
 
 
 }

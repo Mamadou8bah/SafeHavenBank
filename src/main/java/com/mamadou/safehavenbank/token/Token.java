@@ -1,6 +1,7 @@
 package com.mamadou.safehavenbank.token;
 
 import com.mamadou.safehavenbank.entity.User;
+import com.mamadou.safehavenbank.enums.TokenType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +19,8 @@ public class Token {
 
     private String token;
 
+    @Enumerated(EnumType.STRING)
+    private TokenType type=TokenType.BEARER;
     private boolean revoked;
 
     private boolean expired;

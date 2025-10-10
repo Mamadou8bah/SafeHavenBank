@@ -19,10 +19,10 @@ public class TokenService {
 
     @Transactional
     public Token createToken(String token) {
-        String email = jwtUtil.extractEmailFromToken(token);
+        String email = jwtUtil.extractUsername(token);
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found for email: " + email));
+                .orElseThrow(() -> new RuntimeException("User not found "));
 
         Token tokenObj = new Token();
         tokenObj.setToken(token);

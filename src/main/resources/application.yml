@@ -5,26 +5,27 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
-
-
   jpa:
     hibernate:
       ddl-auto: update
-
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-
-
   mail:
-    password: ${MAIL_PASSWORD}
-    username: ${MAIL_USERNAME}
     host: smtp.gmail.com
     port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
-jwt:
-  secret: ${JWT_SECRET}
-  expiration: ${JWT_EXPIRATION}
+
+application:
+  security:
+    jwt:
+      secret: ${JWT_SECRET}
+      refresh-token:
+        expiration: 28800000
+      access-token:
+        expiration: 900000
