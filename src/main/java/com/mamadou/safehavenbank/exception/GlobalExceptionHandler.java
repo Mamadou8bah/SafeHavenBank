@@ -21,4 +21,16 @@ public class GlobalExceptionHandler {
         APIResponse<Object> response =APIResponse.error(ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<APIResponse<Object>> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
+        APIResponse<Object> response =APIResponse.error(ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(TokenNotFoundException.class)
+    public ResponseEntity<APIResponse<Object>> handleTokenNotFoundException(TokenNotFoundException ex, WebRequest request) {
+        APIResponse<Object> response =APIResponse.error(ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
 }

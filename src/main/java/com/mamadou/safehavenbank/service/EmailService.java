@@ -48,4 +48,13 @@ public class EmailService {
         sendEmail(email,"verification-email","Verify your email address- SafeHaven Bank",context);
 
     }
+
+    public void sendPasswordResetEmail(String email,String token,String fullName)
+            throws MessagingException, UnsupportedEncodingException {
+        String link = "http://localhost:8080/api/auth/reset?token=" + token;
+        Context context = new Context();
+        context.setVariable("username", fullName);
+        context.setVariable("resetLink",link);
+        sendEmail(email,"password-rest","Password reset your email address- SafeHaven Bank",context);
+    }
 }

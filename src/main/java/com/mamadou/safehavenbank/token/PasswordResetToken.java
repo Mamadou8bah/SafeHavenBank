@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @AllArgsConstructor
@@ -19,11 +21,13 @@ public class PasswordResetToken {
     private long id;
 
     @NotNull
-    private long token;
+    private String token;
 
     private boolean expired;
 
     private boolean revoked;
+
+    private LocalDateTime expiryDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
