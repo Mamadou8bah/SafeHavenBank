@@ -5,6 +5,8 @@ import com.mamadou.safehavenbank.dto.LoginRequest;
 import com.mamadou.safehavenbank.dto.LoginResponse;
 import com.mamadou.safehavenbank.dto.RegisterRequest;
 import com.mamadou.safehavenbank.entity.User;
+import com.mamadou.safehavenbank.enums.Role;
+import com.mamadou.safehavenbank.exception.UnverifiedUserException;
 import com.mamadou.safehavenbank.exception.UserAlreadyFoundException;
 import com.mamadou.safehavenbank.repository.UserRepository;
 import com.mamadou.safehavenbank.token.Token;
@@ -54,6 +56,7 @@ public class AuthService {
         User userEntity = RegisterRequestWrapper.wrapToUser(registerRequest);
         userEntity.setPassword(encoder.encode(password));
         userEntity.setVerified(false);
+        userEntity.setRole(Role.USER);
         userRepository.save(userEntity);
         VerificationToken verificationToken = verificationTokenService.createVerificationToken(userEntity);
         emailService.sendVerificationEmail(userEntity.getEmail(),verificationToken.getToken(), userEntity.getFullName() );
@@ -67,19 +70,31 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
         );
         Optional<User>user = userRepository.findByEmail(loginRequest.getEmail());
+        User userEntity = user.orElseThrow(() -> new RuntimeException("User not found after authentication"));
 
-        User userEntity = user.get();
         if (!userEntity.isVerified()) {
-            throw new RuntimeException("User is not verified");
+            throw new UnverifiedUserException("User is not verified");
         }
-        Token refresh_token=tokenService.createToken(user.get());
 
-        String access_token=jwtUtil.generateToken(user.get());
+        Token refreshToken = tokenService.createToken(userEntity);
+        String accessToken = jwtUtil.generateToken(userEntity);
 
-        LoginResponse loginResponse=new LoginResponse();
-        loginResponse.setAccess_token(access_token);
-        loginResponse.setRefresh_token(refresh_token.getToken());
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setAccess_token(accessToken);
+        loginResponse.setRefresh_token(refreshToken.getToken());
         return loginResponse;
+
+    }
+
+    public String verifyEmail(String token) {
+        VerificationToken token1=verificationTokenService.findVerificationTokenByToken(token);
+        if (token1 == null) {
+            throw new RuntimeException("Verification Token not found");
+        }
+        User userEntity = token1.getUser();
+        userEntity.setVerified(true);
+        userRepository.save(userEntity);
+        return "Email Verified! Please login";
     }
 
 }

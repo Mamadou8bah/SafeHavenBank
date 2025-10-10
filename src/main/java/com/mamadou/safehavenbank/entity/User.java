@@ -23,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -72,15 +73,15 @@ public class User implements UserDetails {
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
     @JsonIgnore
-    private List<Token> tokens;
+    private List<Token> tokens=new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy = "user")
     @JsonIgnore
-    private List<PasswordResetToken> passwordResetTokens;
+    private List<PasswordResetToken> passwordResetTokens=new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy = "user")
     @JsonIgnore
-    private List<VerificationToken> verificationTokens;
+    private List<VerificationToken> verificationTokens=new ArrayList<>();
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getAuthorities();
