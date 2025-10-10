@@ -1,5 +1,7 @@
 package com.mamadou.safehavenbank.util;
 
+import com.mamadou.safehavenbank.token.Token;
+import com.mamadou.safehavenbank.token.TokenService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,8 @@ public class JwtUtil {
 
     @Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshTokenExpiration;
+
+    private final TokenService tokenService;
 
 
     private Key getKey() {
@@ -67,7 +71,9 @@ public class JwtUtil {
     }
 
     private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        Token token1=tokenService.getToken(token);
+        boolean isValid=!token1.isExpired() && !token1.isRevoked();
+        return extractExpiration(token).before(new Date()) && isValid;
     }
 
     private Date extractExpiration(String token) {

@@ -21,6 +21,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -95,6 +96,23 @@ public class AuthService {
         userEntity.setVerified(true);
         userRepository.save(userEntity);
         return "Email Verified! Please login";
+    }
+
+    public String logout() {
+        String email= SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> user = userRepository.findByEmail(email);
+        User userEntity = user.orElseThrow(() -> new RuntimeException("User not found after authentication"));
+        userEntity.getTokens().stream()
+                .filter(token->
+                    !token.isExpired() && !token.isRevoked()
+                )
+                .forEach((token)->{
+            token.setExpired(true);
+            token.setRevoked(true);
+        });
+        userRepository.save(userEntity);
+        SecurityContextHolder.getContext().setAuthentication(null);
+        return "Logged out";
     }
 
 }

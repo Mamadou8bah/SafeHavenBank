@@ -8,6 +8,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class TokenService {
@@ -26,6 +28,11 @@ public class TokenService {
        token1.setRevoked(false);
        token1.setExpired(false);
        return tokenRepository.save(token1);
+    }
+
+    public Token getToken(String token) {
+        Optional<Token> token1=tokenRepository.findByToken(token);
+        return token1.orElse(null);
     }
     
     
