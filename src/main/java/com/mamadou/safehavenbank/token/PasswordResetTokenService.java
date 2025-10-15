@@ -38,4 +38,11 @@ public class PasswordResetTokenService {
         int number = 100000 + random.nextInt(900000);
         return String.valueOf(number);
     }
+
+    public User getUserByToken(String token) {
+        return repository.findByToken(token)
+                .map(
+                    PasswordResetToken::getUser
+                ).orElse(null);
+    }
 }

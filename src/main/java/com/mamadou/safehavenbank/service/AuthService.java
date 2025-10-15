@@ -168,7 +168,7 @@ public class AuthService {
         String token=request.getToken();
         String password=request.getPassword();
 
-        var user=userRepository.findByPasswordResetToken(token);
+        var user=passwordResetTokenService.getUserByToken(token);
 
         if(user==null){
             throw new UserNotFoundException("User not found");
@@ -182,6 +182,8 @@ public class AuthService {
         userRepository.save(user);
         return "Password Reset Successful";
     }
+
+
 
 
 }

@@ -77,7 +77,7 @@ public class User implements UserDetails {
 
     @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy = "user")
     @JsonIgnore
-    private List<PasswordResetToken> passwordResetTokens=new ArrayList<>();
+    private List<PasswordResetToken> resetTokens=new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy = "user")
     @JsonIgnore

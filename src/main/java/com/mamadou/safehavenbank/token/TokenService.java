@@ -34,7 +34,11 @@ public class TokenService {
         Optional<Token> token1=tokenRepository.findByToken(token);
         return token1.orElse(null);
     }
-    
-    
+    public boolean isTokenValidInDB(String token) {
+        Token tokenEntity = getToken(token);
+        return tokenEntity != null && !tokenEntity.isExpired() && !tokenEntity.isRevoked();
+    }
+
+
 
 }

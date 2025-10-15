@@ -29,7 +29,6 @@ public class JwtUtil {
     @Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshTokenExpiration;
 
-    private final TokenService tokenService;
 
 
     private Key getKey() {
@@ -65,15 +64,14 @@ public class JwtUtil {
                 .compact();
 
     }
-    public boolean isTokenValid(String token,UserDetails userDetails) {
-        final String username=extractUsername(token);
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
         return userDetails.getUsername().equals(username) && !isTokenExpired(token);
     }
 
+
     private boolean isTokenExpired(String token) {
-        Token token1=tokenService.getToken(token);
-        boolean isValid=!token1.isExpired() && !token1.isRevoked();
-        return extractExpiration(token).before(new Date()) && isValid;
+        return extractExpiration(token).before(new Date());
     }
 
     private Date extractExpiration(String token) {
