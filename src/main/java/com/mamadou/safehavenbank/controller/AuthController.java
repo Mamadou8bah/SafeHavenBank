@@ -1,9 +1,7 @@
 package com.mamadou.safehavenbank.controller;
 
-import com.mamadou.safehavenbank.dto.APIResponse;
-import com.mamadou.safehavenbank.dto.LoginRequest;
-import com.mamadou.safehavenbank.dto.LoginResponse;
-import com.mamadou.safehavenbank.dto.RegisterRequest;
+import com.mamadou.safehavenbank.dto.*;
+import com.mamadou.safehavenbank.entity.User;
 import com.mamadou.safehavenbank.service.AuthService;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -13,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -52,6 +51,22 @@ public class AuthController {
         } catch (RuntimeException e) {
             return new ResponseEntity<>(APIResponse.error(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping("/resend-verification-email")
+    public ResponseEntity<APIResponse<Object>> resendVerificationEmail(@Valid @RequestBody ResendVerificationRequest request) {
+        try{
+            String message=authService.resendVerificationEmail(request.getEmail());
+            return new ResponseEntity<>(APIResponse.success(message), HttpStatus.OK);
+        }catch (RuntimeException | MessagingException | UnsupportedEncodingException e){
+            return new ResponseEntity<>(APIResponse.error(e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @GetMapping
+    public List<User> getUsers() {
+        return authService.getAllUsers();
     }
 
 }

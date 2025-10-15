@@ -55,6 +55,6 @@ public class EmailService {
         Context context = new Context();
         context.setVariable("username", fullName);
         context.setVariable("resetLink",link);
-        sendEmail(email,"password-rest","Password reset your email address- SafeHaven Bank",context);
+        sendEmail(email,"password-reset","Password reset your email address- SafeHaven Bank",context);
     }
 }

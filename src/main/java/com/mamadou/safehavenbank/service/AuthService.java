@@ -26,6 +26,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -52,7 +53,7 @@ public class AuthService {
         String email = registerRequest.getEmail();
         String password = registerRequest.getPassword();
 
-        Optional<User> user = userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByEmailIgnoreCase(email);
         if(user.isPresent()){
             throw new UserAlreadyFoundException("There is an User with this email already!");
         }
@@ -72,7 +73,7 @@ public class AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
         );
-        Optional<User>user = userRepository.findByEmail(loginRequest.getEmail());
+        Optional<User>user = userRepository.findByEmailIgnoreCase(loginRequest.getEmail());
         User userEntity = user.orElseThrow(() -> new UserNotFoundException("User not found"));
 
         if (!userEntity.isVerified()) {
@@ -96,7 +97,12 @@ public class AuthService {
     }
 
     public String resendVerificationEmail(String email) throws MessagingException, UnsupportedEncodingException {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found after authentication"));
+        String cleanedEmail = email == null ? null : email.trim();
+        User user = userRepository.findByEmailIgnoreCase(cleanedEmail).orElseThrow(() -> new UserNotFoundException("User not found please register first"));
+
+        if (user.isVerified()) {
+            return "Your account is already verified.";
+        }
         VerificationToken verificationToken = verificationTokenService.createVerificationToken(user);
         emailService.sendVerificationEmail(user.getEmail(),verificationToken.getToken(), user.getFullName() );
 
@@ -116,7 +122,7 @@ public class AuthService {
 
     public String logout() {
         String email= SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<User> user = userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByEmailIgnoreCase(email);
         User userEntity = user.orElseThrow(() -> new UserNotFoundException("User not found after authentication"));
         userEntity.getTokens().stream()
                 .filter(token->
@@ -136,7 +142,7 @@ public class AuthService {
 
         String email = jwtUtil.extractUsername(token);
 
-        Optional<User> user = userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByEmailIgnoreCase(email);
         User userEntity = user.orElseThrow(() -> new UserNotFoundException("User not found after authentication"));
 
         boolean isValid= jwtUtil.isTokenValid(token, userEntity);
@@ -154,7 +160,7 @@ public class AuthService {
 
     @Transactional
     public String requestPasswordReset(String email) throws MessagingException, UnsupportedEncodingException {
-        Optional<User>user = userRepository.findByEmail(email);
+        Optional<User>user = userRepository.findByEmailIgnoreCase(email);
         User userEntity = user.orElseThrow(() -> new UserNotFoundException("User not found"));
         PasswordResetToken passwordResetToken=passwordResetTokenService.createPasswordResetToken(userEntity);
 
@@ -182,6 +188,12 @@ public class AuthService {
         userRepository.save(user);
         return "Password Reset Successful";
     }
+
+    public List<User>getAllUsers(){
+        return userRepository.findAll();
+    }
+
+
 
 
 
