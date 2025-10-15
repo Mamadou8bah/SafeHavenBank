@@ -23,12 +23,9 @@ public class VerificationTokenService {
         verificationTokenRepository.save(verificationToken);
         return verificationToken;
     }
-
     public VerificationToken findVerificationTokenByToken(String token) {
-        Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
-        if (verificationToken.isPresent())
-            throw new RuntimeException("Token doesnt exists");
-        else
-            return verificationToken.get();
+        return verificationTokenRepository.findByToken(token)
+                .orElseThrow(() -> new RuntimeException("Token doesn't exist"));
     }
+
 }

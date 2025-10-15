@@ -8,10 +8,7 @@ import com.mamadou.safehavenbank.token.PasswordResetToken;
 import com.mamadou.safehavenbank.token.Token;
 import com.mamadou.safehavenbank.token.VerificationToken;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,7 +43,8 @@ public class User implements UserDetails {
     @Email(message = "Email must be valid")
     private String email;
 
-    @Size(min=7, max = 10)
+
+    @Max(value = 9999999999L, message = "Phone number must be 10 digits or less")
     private long phoneNumber;
 
     @NotBlank
